@@ -8,11 +8,13 @@
     "type": "git",
     "url": "https://github.com/jin1c-3/ssh-browse.git"
   },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "onView:sshBrowse.connections",
     "onFileSystem:ssh-browse"
   ],
   "main": "./dist/extension.js",
