@@ -4,8 +4,9 @@
   "description": "Browse files and run commands on remote SSH hosts without opening a folder",
   "version": "0.1.0",
   "publisher": "jin1c",
-  "engines": {
-    "vscode": "^1.85.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jin1c-3/ssh-browse.git"
   },
   "categories": [
     "Other"
