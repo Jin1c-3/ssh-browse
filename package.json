@@ -1,0 +1,290 @@
+{
+  "name": "ssh-browse",
+  "displayName": "SSH Browse",
+  "description": "Browse files and run commands on remote SSH hosts without opening a folder",
+  "version": "0.1.0",
+  "publisher": "ethan",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:sshBrowse.connections",
+    "onFileSystem:ssh-browse"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ssh-browse",
+          "title": "SSH Browse",
+          "icon": "media/ssh-browse-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "ssh-browse": [
+        {
+          "id": "sshBrowse.connections",
+          "name": "Connections"
+        },
+        {
+          "id": "sshBrowse.fileExplorer",
+          "name": "Remote Files",
+          "when": "sshBrowse.hasActiveConnection"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "sshBrowse.addConnection",
+        "title": "Add Connection",
+        "category": "SSH Browse",
+        "icon": "$(add)"
+      },
+      {
+        "command": "sshBrowse.editConnection",
+        "title": "Edit Connection",
+        "category": "SSH Browse",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "sshBrowse.removeConnection",
+        "title": "Remove Connection",
+        "category": "SSH Browse",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "sshBrowse.connect",
+        "title": "Connect",
+        "category": "SSH Browse",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "sshBrowse.disconnect",
+        "title": "Disconnect",
+        "category": "SSH Browse",
+        "icon": "$(debug-disconnect)"
+      },
+      {
+        "command": "sshBrowse.refreshTree",
+        "title": "Refresh",
+        "category": "SSH Browse",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "sshBrowse.openTerminal",
+        "title": "Open Terminal",
+        "category": "SSH Browse",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "sshBrowse.goToPath",
+        "title": "Go to Path",
+        "category": "SSH Browse",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "sshBrowse.createFile",
+        "title": "New File",
+        "category": "SSH Browse",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "sshBrowse.createFolder",
+        "title": "New Folder",
+        "category": "SSH Browse",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "sshBrowse.rename",
+        "title": "Rename",
+        "category": "SSH Browse"
+      },
+      {
+        "command": "sshBrowse.delete",
+        "title": "Delete",
+        "category": "SSH Browse",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "sshBrowse.copyPath",
+        "title": "Copy Remote Path",
+        "category": "SSH Browse"
+      },
+      {
+        "command": "sshBrowse.download",
+        "title": "Download",
+        "category": "SSH Browse",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "sshBrowse.importSSHConfig",
+        "title": "Import from SSH Config",
+        "category": "SSH Browse"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "sshBrowse.addConnection",
+          "when": "view == sshBrowse.connections",
+          "group": "navigation"
+        },
+        {
+          "command": "sshBrowse.importSSHConfig",
+          "when": "view == sshBrowse.connections"
+        },
+        {
+          "command": "sshBrowse.refreshTree",
+          "when": "view == sshBrowse.fileExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "sshBrowse.goToPath",
+          "when": "view == sshBrowse.fileExplorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "sshBrowse.connect",
+          "when": "view == sshBrowse.connections && viewItem == disconnectedHost",
+          "group": "inline"
+        },
+        {
+          "command": "sshBrowse.disconnect",
+          "when": "view == sshBrowse.connections && viewItem == connectedHost",
+          "group": "inline"
+        },
+        {
+          "command": "sshBrowse.openTerminal",
+          "when": "view == sshBrowse.connections && viewItem == connectedHost",
+          "group": "inline"
+        },
+        {
+          "command": "sshBrowse.editConnection",
+          "when": "view == sshBrowse.connections && viewItem =~ /Host$/",
+          "group": "1_connection"
+        },
+        {
+          "command": "sshBrowse.removeConnection",
+          "when": "view == sshBrowse.connections && viewItem =~ /Host$/",
+          "group": "1_connection"
+        },
+        {
+          "command": "sshBrowse.openTerminal",
+          "when": "view == sshBrowse.fileExplorer && viewItem == directory",
+          "group": "1_open"
+        },
+        {
+          "command": "sshBrowse.createFile",
+          "when": "view == sshBrowse.fileExplorer && viewItem == directory",
+          "group": "2_new"
+        },
+        {
+          "command": "sshBrowse.createFolder",
+          "when": "view == sshBrowse.fileExplorer && viewItem == directory",
+          "group": "2_new"
+        },
+        {
+          "command": "sshBrowse.rename",
+          "when": "view == sshBrowse.fileExplorer && viewItem =~ /^(file|directory)$/",
+          "group": "3_edit"
+        },
+        {
+          "command": "sshBrowse.delete",
+          "when": "view == sshBrowse.fileExplorer && viewItem =~ /^(file|directory)$/",
+          "group": "3_edit"
+        },
+        {
+          "command": "sshBrowse.copyPath",
+          "when": "view == sshBrowse.fileExplorer && viewItem =~ /^(file|directory)$/",
+          "group": "4_util"
+        },
+        {
+          "command": "sshBrowse.download",
+          "when": "view == sshBrowse.fileExplorer && viewItem == file",
+          "group": "4_util"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "SSH Browse",
+      "properties": {
+        "sshBrowse.connections": {
+          "type": "array",
+          "default": [],
+          "description": "Saved SSH connections",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Display name for this connection"
+              },
+              "host": {
+                "type": "string",
+                "description": "Hostname or IP address"
+              },
+              "port": {
+                "type": "number",
+                "default": 22,
+                "description": "SSH port"
+              },
+              "username": {
+                "type": "string",
+                "description": "Username"
+              },
+              "authMethod": {
+                "type": "string",
+                "enum": [
+                  "password",
+                  "key",
+                  "agent",
+                  "sshConfig"
+                ],
+                "default": "key",
+                "description": "Authentication method"
+              },
+              "privateKeyPath": {
+                "type": "string",
+                "description": "Path to private key file (for key auth)"
+              },
+              "initialPath": {
+                "type": "string",
+                "default": "/",
+                "description": "Initial remote path to browse"
+              }
+            },
+            "required": [
+              "name",
+              "host",
+              "username"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ssh2": "^1.15.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.0.0",
+    "typescript": "~5.7.0"
+  },
+  "dependencies": {
+    "ssh2": "^1.16.0",
+    "ssh-config": "^5.1.0"
+  }
+}
